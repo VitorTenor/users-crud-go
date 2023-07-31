@@ -5,7 +5,7 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/validation"
 	"github.com/VitorTenor/users-crud-go/src/controller/user/model/request"
 	"github.com/VitorTenor/users-crud-go/src/model"
-	"github.com/VitorTenor/users-crud-go/src/model/service"
+	"github.com/VitorTenor/users-crud-go/src/view"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -15,7 +15,7 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	logger.Info("Init CreateUser Controller", zap.String("journey", "create user"))
 
 	var userRequest request.UserRequest
@@ -28,9 +28,8 @@ func CreateUser(c *gin.Context) {
 	}
 
 	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
-	svc := service.NewUserDomainService()
 
-	if err := svc.CreateUser(domain); err != nil {
+	if err := uc.service.CreateUser(domain); err != nil {
 		logger.Error("Error when trying to create user", err, zap.String("journey", "create user"))
 		c.JSON(err.Code, err)
 		return
@@ -38,5 +37,5 @@ func CreateUser(c *gin.Context) {
 
 	logger.Info("User created successfully", zap.String("journey", "create user"))
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
 }

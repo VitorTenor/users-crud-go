@@ -5,6 +5,10 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/model"
 )
 
-func (*userDomainService) FindUser(string) (*model.UserDomainInterface, *rest_error.Err) {
+func (*userDomainService) FindUserById(string) (*model.UserDomainInterface, *rest_error.Err) {
+	return nil, nil
+}
+
+func (*userDomainService) FindUserByEmail(string) (*model.UserDomainInterface, *rest_error.Err) {
 	return nil, nil
 }
