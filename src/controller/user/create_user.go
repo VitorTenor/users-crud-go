@@ -5,6 +5,7 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/validation"
 	"github.com/VitorTenor/users-crud-go/src/controller/user/model/request"
 	"github.com/VitorTenor/users-crud-go/src/model"
+	"github.com/VitorTenor/users-crud-go/src/model/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -27,8 +28,9 @@ func CreateUser(c *gin.Context) {
 	}
 
 	domain := model.NewUserDomain(userRequest.Email, userRequest.Password, userRequest.Name, userRequest.Age)
+	svc := service.NewUserDomainService()
 
-	if err := domain.CreateUser(); err != nil {
+	if err := svc.CreateUser(domain); err != nil {
 		logger.Error("Error when trying to create user", err, zap.String("journey", "create user"))
 		c.JSON(err.Code, err)
 		return

@@ -1,9 +1,9 @@
-package model
+package service
 
 import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/rest_error"
 )
 
-func (*UserDomain) DeleteUser(string) *rest_error.Err {
+func (*userDomainService) DeleteUser(string) *rest_error.Err {
 	return nil
 }
