@@ -5,20 +5,27 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"os"
 )
 
-func InitConnection() {
+var (
+	MONGODB_URI    = os.Getenv("MONGODB.URI")
+	MONGODB_DBNAME = os.Getenv("MONGODB.DBNAME")
+)
+
+func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 	logger.Info("Initializing mongodb connection")
-	ctx := context.Background()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MONGODB_URI))
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	logger.Info("Mongodb connection initialized with success")
+	return client.Database(MONGODB_DBNAME), nil
 }

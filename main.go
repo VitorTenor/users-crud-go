@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/VitorTenor/users-crud-go/src/configuration/database/mongodb"
 	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"github.com/VitorTenor/users-crud-go/src/controller/routes"
 	"github.com/VitorTenor/users-crud-go/src/controller/user"
@@ -16,8 +15,6 @@ func main() {
 	if err != nil {
 		logger.Error("Error loading .env file", err)
 	}
-
-	mongodb.InitConnection()
 
 	svc := service.NewUserDomainService()
 	userController := user.NewUserControllerInterface(svc)
