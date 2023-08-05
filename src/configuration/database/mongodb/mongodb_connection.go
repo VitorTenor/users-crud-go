@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	MONGODB_URI    = os.Getenv("MONGODB.URI")
-	MONGODB_DBNAME = os.Getenv("MONGODB.DBNAME")
+	MONGODB_URI    = "MONGODB_URI"
+	MONGODB_DBNAME = "MONGODB_DBNAME"
 )
 
 func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 	logger.Info("Initializing mongodb connection")
 
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(MONGODB_URI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv(MONGODB_URI)))
 	if err != nil {
 		return nil, err
 	}
@@ -27,5 +27,5 @@ func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 	}
 
 	logger.Info("Mongodb connection initialized with success")
-	return client.Database(MONGODB_DBNAME), nil
+	return client.Database(os.Getenv(MONGODB_DBNAME)), nil
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"github.com/VitorTenor/users-crud-go/src/configuration/rest_error"
 	"github.com/VitorTenor/users-crud-go/src/model"
@@ -10,9 +9,15 @@ import (
 
 func (ud *userDomainService) CreateUser(
 	userDomain model.UserDomainInterface,
-) *rest_error.Err {
-	logger.Info("Init CreateUser Model", zap.String("journey", "create user"))
+) (model.UserDomainInterface, *rest_error.Err) {
+	logger.Info("Init CreateUser Model", zap.String("journey", "createUser"))
 	userDomain.EncryptPassword()
-	fmt.Println(userDomain.GetPassword())
-	return nil
+
+	userDomainRepo, err := ud.userRepository.CreateUser(userDomain)
+	if err != nil {
+		logger.Error("Error on create user", err, zap.String("journey", "createUser"))
+		return nil, err
+	}
+
+	return userDomainRepo, nil
 }
