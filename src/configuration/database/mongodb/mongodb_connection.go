@@ -5,6 +5,7 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"os"
 )
 
@@ -18,12 +19,12 @@ func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv(MONGODB_URI)))
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
 	logger.Info("Mongodb connection initialized with success")

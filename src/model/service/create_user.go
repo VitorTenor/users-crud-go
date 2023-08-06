@@ -7,15 +7,20 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ud *userDomainService) CreateUser(
-	userDomain model.UserDomainInterface,
-) (model.UserDomainInterface, *rest_error.Err) {
-	logger.Info("Init CreateUser Model", zap.String("journey", "createUser"))
+func (ud *userDomainService) CreateUserServices(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_error.Err) {
+	logger.Info("Init CreateUser Model",
+		zap.String("journey", "createUser"),
+	)
+
 	userDomain.EncryptPassword()
 
 	userDomainRepo, err := ud.userRepository.CreateUser(userDomain)
 	if err != nil {
-		logger.Error("Error on create user", err, zap.String("journey", "createUser"))
+		logger.Error("Error on create user",
+			err,
+			zap.String("journey", "createUser"),
+		)
+
 		return nil, err
 	}
 
