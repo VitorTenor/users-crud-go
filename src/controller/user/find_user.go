@@ -5,7 +5,7 @@ import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/rest_error"
 	"github.com/VitorTenor/users-crud-go/src/view"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	"net/http"
 	"net/mail"
@@ -16,8 +16,8 @@ func (uc *userControllerInterface) FindUserById(c *gin.Context) {
 		zap.String("journey", "findUserById"),
 	)
 
-	userId := c.Param("userId")
-	if _, err := uuid.Parse(userId); err != nil {
+	userId := c.Param("id")
+	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
 		logger.Error("Error trying validate UUID",
 			err,
 			zap.String("journey", "findUserById"),
