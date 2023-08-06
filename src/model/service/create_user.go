@@ -24,5 +24,10 @@ func (ud *userDomainService) CreateUserServices(userDomain model.UserDomainInter
 		return nil, err
 	}
 
+	logger.Info("User created successfully",
+		zap.String("id", userDomainRepo.GetId()),
+		zap.String("journey", "createUser"),
+	)
+
 	return userDomainRepo, nil
 }

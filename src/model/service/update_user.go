@@ -1,10 +1,26 @@
 package service
 
 import (
+	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"github.com/VitorTenor/users-crud-go/src/configuration/rest_error"
 	"github.com/VitorTenor/users-crud-go/src/model"
+	"go.uber.org/zap"
 )
 
-func (*userDomainService) UpdateUserServices(userId string, userDomain model.UserDomainInterface) *rest_error.Err {
+func (ud *userDomainService) UpdateUserServices(userId string, userDomain model.UserDomainInterface) *rest_error.Err {
+	logger.Info("Init UpdateUser Model",
+		zap.String("journey", "updateUser"),
+	)
+
+	err := ud.userRepository.UpdateUser(userId, userDomain)
+	if err != nil {
+		logger.Error("Error on update user",
+			err,
+			zap.String("journey", "updateUser"),
+		)
+
+		return err
+	}
+
 	return nil
 }
