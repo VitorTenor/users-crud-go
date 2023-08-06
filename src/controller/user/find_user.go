@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/VitorTenor/users-crud-go/src/configuration/logger"
 	"github.com/VitorTenor/users-crud-go/src/configuration/rest_error"
+	"github.com/VitorTenor/users-crud-go/src/controller/user/model/response"
 	"github.com/VitorTenor/users-crud-go/src/view"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -10,6 +11,31 @@ import (
 	"net/http"
 	"net/mail"
 )
+
+func (uc *userControllerInterface) FindAllUsers(c *gin.Context) {
+	logger.Info("Init FindAllUsers Controller",
+		zap.String("journey", "findAllUsers"),
+	)
+
+	userDomain, err := uc.service.FindAllUsersServices()
+	if err != nil {
+		logger.Error("Error trying to call FindAllUsersServices",
+			err,
+			zap.String("journey", "findAllUsers"),
+		)
+
+		c.JSON(err.Code, err)
+		return
+	}
+
+	var userResponse []response.UserResponse
+
+	for _, user := range userDomain {
+		userResponse = append(userResponse, view.ConvertDomainToResponse(user))
+	}
+
+	c.JSON(http.StatusOK, userResponse)
+}
 
 func (uc *userControllerInterface) FindUserById(c *gin.Context) {
 	logger.Info("Init FindUserById Controller",

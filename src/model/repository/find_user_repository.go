@@ -16,6 +16,52 @@ import (
 	"os"
 )
 
+func (ur *userRepository) FindAllUsers() ([]model.UserDomainInterface, *rest_error.Err) {
+	logger.Info("Init findAll repository",
+		zap.String("journey", "findAll"),
+	)
+
+	collection_name := os.Getenv(MONGODB_USER_DB)
+
+	collection := ur.databaseConnection.Collection(collection_name)
+
+	users, err := collection.Find(context.Background(), bson.D{})
+	if err != nil {
+		logger.Error("Error on find all users",
+			err,
+			zap.String("journey", "findAll"),
+		)
+
+		return nil, rest_error.NewInternalServerError("Error on find all users", err)
+	}
+
+	var usersDomain []model.UserDomainInterface
+
+	for users.Next(context.Background()) {
+		userEntity := &entity.UserEntity{}
+
+		err := users.Decode(userEntity)
+		if err != nil {
+			logger.Error("Error on decode userEntity",
+				err,
+				zap.String("journey", "findAll"),
+			)
+
+			return nil, rest_error.NewInternalServerError("Error on decode userEntity", err)
+		}
+
+		userDomain := converter.ConvertUserEntityToUserDomain(*userEntity)
+
+		usersDomain = append(usersDomain, userDomain)
+	}
+
+	logger.Info("FindAll repository OK",
+		zap.String("journey", "findAll"),
+	)
+
+	return usersDomain, nil
+}
+
 func (ur *userRepository) FindUserByEmail(email string) (model.UserDomainInterface, *rest_error.Err) {
 	logger.Info("Init findUserByEmail repository",
 		zap.String("journey", "findUserByEmail"),

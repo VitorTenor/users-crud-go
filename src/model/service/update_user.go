@@ -8,7 +8,7 @@ import (
 )
 
 func (ud *userDomainService) UpdateUserServices(userId string, userDomain model.UserDomainInterface) *rest_error.Err {
-	logger.Info("Init UpdateUser Model",
+	logger.Info("Init UpdateUser Service",
 		zap.String("journey", "updateUser"),
 	)
 
@@ -21,6 +21,11 @@ func (ud *userDomainService) UpdateUserServices(userId string, userDomain model.
 
 		return err
 	}
+
+	logger.Info("User updated successfully",
+		zap.String("userId", userId),
+		zap.String("journey", "updateUser"),
+	)
 
 	return nil
 }
