@@ -8,24 +8,14 @@ import (
 )
 
 func (ud *userDomainService) FindAllUsersServices() ([]model.UserDomainInterface, *rest_error.Err) {
-	logger.Info("Init FindAllUsers service",
+	logger.Info("Init FindAllUsers Service",
 		zap.String("journey", "findAllUsers"),
 	)
 
-	users, err := ud.userRepository.FindAllUsers()
-	if err != nil {
-		logger.Error("Error on find all users",
-			err,
-			zap.String("journey", "findAllUsers"),
-		)
-
-		return nil, err
-	}
-
-	return users, nil
+	return ud.userRepository.FindAllUsers()
 }
 func (ud *userDomainService) FindUserByIdServices(userId string) (model.UserDomainInterface, *rest_error.Err) {
-	logger.Info("Init FindUserById service",
+	logger.Info("Init FindUserById Service",
 		zap.String("journey", "findUserById"),
 	)
 
@@ -33,9 +23,16 @@ func (ud *userDomainService) FindUserByIdServices(userId string) (model.UserDoma
 }
 
 func (ud *userDomainService) FindUserByEmailServices(email string) (model.UserDomainInterface, *rest_error.Err) {
-	logger.Info("Init FindUserByEmail service",
+	logger.Info("Init FindUserByEmail Service",
 		zap.String("journey", "findUserByEmail"),
 	)
 
 	return ud.userRepository.FindUserByEmail(email)
+}
+
+func (ud *userDomainService) findUserByEmailAndPasswordServices(email string, password string) (model.UserDomainInterface, *rest_error.Err) {
+	logger.Info("Init FindUserByEmailAndPassword Service",
+		zap.String("journey", "findUserByEmailAndPassword"),
+	)
+	return ud.userRepository.FindUserByEmailAndPassword(email, password)
 }
