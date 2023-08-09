@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (ud *userDomainService) LoginUserServices(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_error.Err) {
+func (ud *userDomainService) LoginUserServices(userDomain model.UserDomainInterface) (model.UserDomainInterface, string, *rest_error.Err) {
 	logger.Info("Init LoginUser Service",
 		zap.String("journey", "loginUser"),
 	)
@@ -20,7 +20,16 @@ func (ud *userDomainService) LoginUserServices(userDomain model.UserDomainInterf
 			err,
 			zap.String("journey", "loginUser"),
 		)
-		return nil, err
+		return nil, "", err
+	}
+
+	token, err := user.GenerateToken()
+	if err != nil {
+		logger.Error("Error when trying to generate token",
+			err,
+			zap.String("journey", "loginUser"),
+		)
+		return nil, "", err
 	}
 
 	logger.Info("LoginUser Service OK")
@@ -30,5 +39,5 @@ func (ud *userDomainService) LoginUserServices(userDomain model.UserDomainInterf
 		zap.String("journey", "loginUser"),
 	)
 
-	return user, nil
+	return user, token, nil
 }
